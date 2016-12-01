@@ -25,6 +25,7 @@ SSI0_SR_R               EQU   0x4000800C
 SSI_SR_RNE              EQU   0x00000004  ; SSI Receive FIFO Not Empty
 SSI_SR_BSY              EQU   0x00000010  ; SSI Busy Bit
 SSI_SR_TNF              EQU   0x00000002  ; SSI Transmit FIFO Not Full
+DC                      EQU   0x40004100
 
       EXPORT   writecommand
       EXPORT   writedata
@@ -62,7 +63,23 @@ writecommand
 ;4) Write the command to SSI0_DR_R
 ;5) Read SSI0_SR_R and check bit 4, 
 ;6) If bit 4 is high, loop back to step 5 (wait for BUSY bit to be low)
-
+	LDR R1, =SSI0_SR_R
+	LDR R2, [R1]
+	AND R2, R2, #0x10
+	CMP R2, #0x10
+	BEQ writecommand
+	LDR R1, =DC
+	LDR R2, [R1]
+	BIC R2, #0x40
+	STR R2, [R1]
+	LDR R1, =SSI0_DR_R
+	STR R0, [R1]
+loop
+	LDR R1, =SSI0_SR_R
+	LDR R2, [R1]
+	AND R2, R2, #0x10
+	CMP R2, #0x10
+	BEQ loop
     
     
     BX  LR                          ;   return
@@ -76,7 +93,16 @@ writedata
 ;2) If bit 1 is low loop back to step 1 (wait for TNF bit to be high)
 ;3) Set D/C=PA6 to one
 ;4) Write the 8-bit data to SSI0_DR_R
-
+	LDR R1, =SSI0_SR_R
+	LDR R2, [R1]
+	AND R2, R2, #0x02
+	CMP R2, #0x00
+	BEQ writedata
+	LDR R1, =DC
+	MOV R2, #0x40
+	STR R2, [R1]
+    LDR R1, =SSI0_DR_R
+	STR R0, [R1]
     
     
     BX  LR                          ;   return

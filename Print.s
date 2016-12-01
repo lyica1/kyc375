@@ -13,7 +13,7 @@
     IMPORT   ST7735_OutString
     EXPORT   LCD_OutDec
     EXPORT   LCD_OutFix
-
+ZERO	EQU	0
     AREA    |.text|, CODE, READONLY, ALIGN=2
     THUMB
 
@@ -25,6 +25,20 @@
 ; Output: none
 ; Invariables: This function must not permanently modify registers R4 to R11
 LCD_OutDec
+	PUSH{R0, LR}
+	CMP R0, #10
+	BLO Done
+	MOV R2, #10
+	UDIV R3, R0, R2
+	MLS R1, R3, R2, R0
+	MOV R0, R3
+	STR R1, [SP, #ZERO]
+	BL LCD_OutDec
+	LDR R0, [SP, #ZERO]
+Done
+	ADD R0, #'0'
+	BL ST7735_OutChar
+	POP{R0, LR}
 
 
       BX  LR
@@ -43,8 +57,31 @@ LCD_OutDec
 ;       R0>9999, then output "*.*** "
 ; Invariables: This function must not permanently modify registers R4 to R11
 LCD_OutFix
-
-     BX   LR
+	MOV R1, #4
+LCD_OutFix1
+	PUSH {R0, R1, R4, LR}
+	CMP R1, #0
+	BEQ FINISH
+	MOV R3, #10
+	UDIV R2, R0, R3
+	MLS R4, R2, R3, R0
+	MOV R0, R2
+	STR R4, [SP]
+	STR R1, [SP, #4]
+	SUB R1, #1
+	BL LCD_OutFix1
+	LDR R0, [SP]
+	ADD R0, #'0'
+	BL ST7735_OutChar
+	LDR R1, [SP, #4]
+	CMP R1, #1
+	BNE FINISH
+	MOV R0, #'.'
+	BL ST7735_OutChar
+	B FINISH
+FINISH
+	POP {R0, R1, R4, LR}
+    BX   LR
  
      ALIGN
 ;* * * * * * * * End of LCD_OutFix * * * * * * * *

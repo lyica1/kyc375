@@ -1,20 +1,33 @@
 // Sound.h
-// Runs on TM4C123 or LM4F120
-// Prototypes for basic functions to play sounds from the
-// original Space Invaders.
-// Jonathan Valvano
-// November 17, 2014
+// This module contains the SysTick ISR that plays sound
+// Runs on LM4F120 or TM4C123
+// Program written by: put your names here
+// Date Created: 8/25/2014 
+// Last Modified: 10/5/2014 
+// Section 1-2pm     TA: Wooseok Lee
+// Lab number: 6
+// Hardware connections
+
+// Header files contain the prototypes for public functions
+// this file explains what the module does
+
+// **************Sound_Init*********************
+// Initialize Systick periodic interrupts
+// Called once, with sound initially off
+// Input: interrupt period
+//           Units to be determined by YOU
+//           Maximum to be determined by YOU
+//           Minimum to be determined by YOU
+// Output: none
+void Sound_Init(uint32_t period);
 
 
-void Sound_Init(void);
-void Sound_Play(const uint8_t *pt, uint32_t count);
-void Sound_Shoot(void);
-void Sound_Killed(void);
-void Sound_Explosion(void);
-
-void Sound_Fastinvader1(void);
-void Sound_Fastinvader2(void);
-void Sound_Fastinvader3(void);
-void Sound_Fastinvader4(void);
-void Sound_Highpitch(void);
-
+// **************Sound_Play*********************
+// Start sound output, and set Systick interrupt period 
+// Input: interrupt period
+//           Units to be determined by YOU
+//           Maximum to be determined by YOU
+//           Minimum to be determined by YOU
+//         input of zero disable sound output
+// Output: none
+void Sound_Play(uint32_t period);
