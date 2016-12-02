@@ -7974,25 +7974,70 @@ int cloudcount = 1;
 int gameon = 0;
 int j = 0;
 int buttonflag = 0;
+// Player Boat
 struct state{
 	signed x;
 	signed long y;
+	unsigned long Ammo;
 }MainBoat;
+// Shipwrecks
 struct state1{
 	signed long x;
 	signed long y;
 	const unsigned short *image;
 	unsigned long spawned;
 };
+// Cloud Tiles
 struct state2{
 	const unsigned short *image1;
 };
+// Bottom Wave Tiles
 struct state3{
 	const unsigned short *image2;
 };
+// Top Wave Tiles
 struct state4{
 	const unsigned short *image3;
 };
+// Cannon Balls
+struct state5{
+	signed long x;
+	signed long y;
+	const unsigned short *image4;
+};
+// Ammunition Crates
+/*struct state6{
+	signed long x;
+	signed long y;
+	const unsigned short *image5;
+	unsigned long spawned;
+};
+// NEEDS AMMO CRATE IMAGES
+typedef struct state6 AmmoCrate;
+AmmoCrate Ammo[20] = {
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+	{128, 85, Crate, 0},
+};*/
+typedef struct state5 CannonBall;
+CannonBall Cannon = {128, 85, Flame};
 typedef struct state4 Wave1;
 Wave1 WaveTile1[25] = {WaveTileBottom1,WaveTileBottom2, WaveTileBottom3, WaveTileBottom4, WaveTileBottom5, WaveTileBottom6, WaveTileBottom7, WaveTileBottom8, WaveTileBottom9, WaveTileBottom10, WaveTileBottom11, WaveTileBottom12, WaveTileBottom13, WaveTileBottom14, WaveTileBottom15, WaveTileBottom16, WaveTileBottom17, WaveTileBottom18, WaveTileBottom19, WaveTileBottom20, WaveTileBottom21, WaveTileBottom22, WaveTileBottom23, WaveTileBottom24, WaveTileBottom25}; 
 typedef struct state3 Wave;
@@ -8146,12 +8191,67 @@ int CheckWreckedShips(void){
 					}	else{
 								LCD_OutDec(NumofShips);
 					}
-					}
-						}
+				}
 			}
 		}
-		return 0;
+	}
+	return 0;
+}
+
+void ClearTrail(int k, int X, int Y, int H){
+	while(k > 0){
+		ST7735_DrawFastVLine(X-k, Y, H, 0xBB45);
+		k--;
+	}	
+}
+
+void MoveCannon(void){
+// Move Cannonball here
+	int j;
+	int check;
+	Mailbox = ADC_In();
+		if(gameon == 1){
+				X = Cannon.x;
+				Y = Cannon.y;
+				if(((Mailbox > 0 && Mailbox <= 585))){
+					j = 1;
+				}	else if(((Mailbox > 585)&&(Mailbox <= 1170))){
+					j = 2;
+				}	else if(((Mailbox > 1170)&&(Mailbox <= 1755))){
+					j = 3;
+				}	else if(((Mailbox > 1755)&&(Mailbox <= 2340))){	
+					j = 4;
+				}	else if(((Mailbox > 2340)&&(Mailbox <= 2925))){
+					j = 5;
+				}	else if(((Mailbox > 2925)&&(Mailbox <=3510))){
+					j = 6;
+				}	else if(((Mailbox > 3510)&&(Mailbox <= 4095))){
+					j = 7;
+				}					
+				
+			ST7735_DrawBitmap(X+j, Y1, Cannon.image4, 3, 3);
+			ClearTrail(j, X, Y1, 3);
+			Cannon.x = X+j;
+			Cannon.y = Y;
+	}
+}
+
+void CannonCollision(void){
+// Check for Collision between Cannonballs and Wrecked ships.
+	for(int k=0; k < 100; k++){
+		if(Cannon.x >= WreckedShips[k].x && Cannon.x <= (WreckedShips[k].x+16 && (Cannon.x+3) >= WreckedShips[k].x && (Cannon.x+3) <= (WreckedShips[k].x+16))){
+			if(Cannon.y >= WreckedShips[k].y && Cannon.y <= (WreckedShips[k].y+13 && (Cannon.y+3) >= WreckedShips[k].y && (Cannon.y+3) <= (WreckedShips[k].y+13))){
+					int X = WreckedShips[k].x;
+					int Y = WreckedShips[k].y;
+					int X1 = Cannon.x;
+					int Y1 = Cannon.y;
+					ST7735_FillRect(X, Y, 16, 13, 0xBB45);
+					ST7735_FillRect(X1, Y1, 3, 3, 0xBB45);
+				}
 		}
+	}
+}
+
 void MoveSpawnedShips(void){
 	int check;
 	int k = 0;
@@ -8286,8 +8386,8 @@ void MoveSpawnedShips(void){
 				}
 			}
 		}
-}
 	}
+}
 void wait(void){
 	int z;
 	for(z=0; z<30000; z++){
@@ -8460,12 +8560,12 @@ void Port_Init(void){
 	SYSCTL_RCGCGPIO_R |= 0x00000008;
 	delay = SYSCTL_RCGCGPIO_R;
 	GPIO_PORTD_LOCK_R = 0x4C4F434B;
-	GPIO_PORTD_CR_R = 0x0F;
-	GPIO_PORTD_AFSEL_R &= ~0x0F;
-	GPIO_PORTD_AMSEL_R &= ~0x0F;
-	GPIO_PORTD_PCTL_R &= ~0x0F;
+	GPIO_PORTD_CR_R = 0x1F;
+	GPIO_PORTD_AFSEL_R &= ~0x1F;
+	GPIO_PORTD_AMSEL_R &= ~0x1F;
+	GPIO_PORTD_PCTL_R &= ~0x1F;
 	GPIO_PORTD_DIR_R |= 0x00;
-	GPIO_PORTD_DEN_R |= 0x0F;
+	GPIO_PORTD_DEN_R |= 0x1F;
 }
 int main(){
 	Start:
@@ -8488,6 +8588,7 @@ int main(){
 	LCD_OutDec(NumofShips);
 	MainBoat.x = 0;
 	MainBoat.y = 93;
+	MainBoat.Ammo = 10;
 	while(1){
 		while(((GPIO_PORTD_DATA_R)&0x01) == 0x01){//up
 			if(gameon == 1){
@@ -8573,6 +8674,22 @@ int main(){
 			}
 		}
 	}
+		while(((GPIO_PORTD_DATA_R)&0x10) == 0x10){
+			if(gameon==1){
+				if(CheckWreckedShips()){
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					goto Start;
+				}
+			}
+			wait();
+			X = MainBoat.x;
+			if(MainBoat.Ammo > 0){
+				if(X+17 < 128){
+					ST7735_DrawBitmap(X+17, Y, Flame, 5, 5);
+					MainBoat.Ammo--;
+				}
+			}
+		}
 		if(CheckWreckedShips()){
 			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
 			goto Start;
