@@ -8162,7 +8162,6 @@ void MoveSpawnedShips(void){
 			ST7735_DrawBitmap(0, 159, VictoryScreen, 128, 160);
 		}
 	}
-	if(o == 0){
 		Mailbox = ADC_In();
 		for(k = 0; k < 100; k++){
 			check = WreckedShips[k].spawned;
@@ -8175,122 +8174,205 @@ void MoveSpawnedShips(void){
 						ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
 						WreckedShips[k].x = X1-1;
 						WreckedShips[k].y = Y1;
-					}	else if((k <= 89)&&((Mailbox > 585)&&(Mailbox <= 1170))){
-							ST7735_DrawBitmap(X1-2, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-2;
-							WreckedShips[k].y = Y1;
+					}else if((k <= 89)&&((Mailbox > 585)&&(Mailbox <= 1170))){
+							if(X1-2<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-2, Y1, WreckedShips[k].image, 16, 13);
+										ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+										WreckedShips[k].x = X1-2;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k <= 89)&&((Mailbox > 1170)&&(Mailbox <= 1755))){
-							ST7735_DrawBitmap(X1-3, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-3;
-							WreckedShips[k].y = Y1;
+							if(X1-3<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-3, Y1, WreckedShips[k].image, 16, 13);
+										ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+										WreckedShips[k].x = X1-3;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k <= 89)&&((Mailbox > 1755)&&(Mailbox <= 2340))){
-							ST7735_DrawBitmap(X1-4, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-4;
-							WreckedShips[k].y = Y1;
+							if(X1-4<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-4, Y1, WreckedShips[k].image, 16, 13);
+										ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+										WreckedShips[k].x = X1-4;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k <= 89)&&((Mailbox > 2340)&&(Mailbox <= 2925))){
-							ST7735_DrawBitmap(X1-5, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-5;
-							WreckedShips[k].y = Y1;
+							if(X1-5<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-5, Y1, WreckedShips[k].image, 16, 13);
+										ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+										WreckedShips[k].x = X1-5;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k <= 89)&&((Mailbox > 2925)&&(Mailbox <=3510))){
-							ST7735_DrawBitmap(X1-6, Y1, WreckedShips[k].image, 6, 13);
-							ST7735_DrawBitmap(X1+10, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-6;
-							WreckedShips[k].y = Y1;
+							if(X1-6<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-6, Y1, WreckedShips[k].image, 6, 13);
+										ST7735_DrawBitmap(X1+10, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+										WreckedShips[k].x = X1-6;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k <= 89)&&((Mailbox > 3510)&&(Mailbox <= 4095))){
-							ST7735_DrawBitmap(X1-7, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+9, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+10, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-7;
-							WreckedShips[k].y = Y1;
+							if(X1-7<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-7, Y1, WreckedShips[k].image, 16, 13);
+										ST7735_DrawBitmap(X1+9, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+10, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+										ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+										WreckedShips[k].x = X1-7;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k >89)&&((Mailbox > 0)&&(Mailbox <= 585))){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 13, 9);
 							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
 							WreckedShips[k].x = X1-1;
 							WreckedShips[k].y = Y1;
 				}	else if((k >89)&&((Mailbox > 585)&&(Mailbox <= 1170))){
-							ST7735_DrawBitmap(X1-2, Y1, WreckedShips[k].image, 13, 9);
-							ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-							WreckedShips[k].x = X1-2;
-							WreckedShips[k].y = Y1;
+							if(X1-2<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-2, Y1, WreckedShips[k].image, 13, 9);
+										ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+										WreckedShips[k].x = X1-2;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k>89)&&((Mailbox > 1170)&&(Mailbox <= 1755))){
-							ST7735_DrawBitmap(X1-3, Y1, WreckedShips[k].image, 13, 9);
-							ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-							WreckedShips[k].x = X1-3;
-							WreckedShips[k].y = Y1;
+							if(X1-3<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-3, Y1, WreckedShips[k].image, 13, 9);
+										ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+										WreckedShips[k].x = X1-3;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k>89)&&((Mailbox > 1755)&&(Mailbox <=2340))){
-							ST7735_DrawBitmap(X1-4, Y1, WreckedShips[k].image, 13, 9);
-							ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-							WreckedShips[k].x = X1-4;
-							WreckedShips[k].y = Y1;
+							if(X1-4<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-4, Y1, WreckedShips[k].image, 13, 9);
+										ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+										WreckedShips[k].x = X1-4;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k>89)&&((Mailbox > 2340)&&(Mailbox <= 2925))){
-							ST7735_DrawBitmap(X1-5, Y1, WreckedShips[k].image, 13, 9);
-							ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-							WreckedShips[k].x = X1-5;
-							WreckedShips[k].y = Y1;
+							if(X1-5<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-5, Y1, WreckedShips[k].image, 13, 9);
+										ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+										WreckedShips[k].x = X1-5;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k>89)&&((Mailbox > 2925)&&(Mailbox <= 3510))){
-							ST7735_DrawBitmap(X1-6, Y1, WreckedShips[k].image, 13, 9);
-							ST7735_DrawBitmap(X1+7, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-							WreckedShips[k].x = X1-6;
-							WreckedShips[k].y = Y1;
+							if(X1-6<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-6, Y1, WreckedShips[k].image, 13, 9);
+										ST7735_DrawBitmap(X1+7, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+										WreckedShips[k].x = X1-6;
+										WreckedShips[k].y = Y1;
+								}
 				}	else if((k>89)&&((Mailbox > 3510)&&(Mailbox <= 4095))){
-							ST7735_DrawBitmap(X1-7, Y1, WreckedShips[k].image, 13, 9);
-							ST7735_DrawBitmap(X1+6, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+7, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-							ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-							WreckedShips[k].x = X1-7;
-							WreckedShips[k].y = Y1;
+							if(X1-7<0){
+								ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+								ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+								WreckedShips[k].x = X1-1;
+								WreckedShips[k].y = Y1;
+								}else{
+										ST7735_DrawBitmap(X1-7, Y1, WreckedShips[k].image, 13, 9);
+										ST7735_DrawBitmap(X1+6, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+7, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+										ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+										WreckedShips[k].x = X1-7;
+										WreckedShips[k].y = Y1;
+								}
 				}
 				}
 			}
 		}
-}
 	}
 void wait(void){
 	int z;
-	for(z=0; z<30000; z++){
+	for(z=0; z<20000; z++){
 	}
 }
 int Collision(void){
