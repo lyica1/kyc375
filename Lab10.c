@@ -8706,7 +8706,7 @@ int main(){
 					MainBoat.y = Y - 1;
 				}
 			}
-			while(((GPIO_PORTD_DATA_R)&0x10) == 0x10){
+			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
 					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
@@ -8758,7 +8758,7 @@ int main(){
 					MainBoat.y = Y + 1;
 				}
 		}
-			while(((GPIO_PORTD_DATA_R)&0x10) == 0x10){
+			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
 					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
@@ -8810,7 +8810,7 @@ int main(){
 					MainBoat.x = X + 1;
 			}
 		}
-			while(((GPIO_PORTD_DATA_R)&0x10) == 0x10){
+			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
 					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
@@ -8862,7 +8862,7 @@ int main(){
 					MainBoat.x = X - 1;
 			}
 		}
-			while(((GPIO_PORTD_DATA_R)&0x10) == 0x10){
+			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
 					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
@@ -8890,7 +8890,7 @@ int main(){
 		}
 	}
 	}
-		while(((GPIO_PORTD_DATA_R)&0x10) == 0x10){
+		while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
 					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
