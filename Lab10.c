@@ -8936,4 +8936,4 @@ int main(){
 				}
 				}
 				//end the game, make a button that resets the program
-			}
+			}//
