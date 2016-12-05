@@ -7974,6 +7974,7 @@ int cloudcount = 1;
 int gameon = 0;
 int j = 0;
 int buttonflag = 0;
+int cannonflag = 0;
 // Player Boat
 struct state{
 	signed x;
@@ -8529,6 +8530,9 @@ q = CheckWreckedShips();
 		flag = 5;
 	}
 	if((p == 0)&&(q == 0)&&(gameon == 1)){
+		if(cannonflag == 1){
+			MoveCannon();
+		}
 		MoveSpawnedShips();
 		CannonCollision();
 			if(flag == 0){
@@ -8730,7 +8734,7 @@ int main(){
 					Cannon.y = Y;
 				}
 			}
-			MoveCannon();
+			cannonflag = 1;
 		}
 	}
 		}
@@ -8782,7 +8786,7 @@ int main(){
 					Cannon.y = Y;
 				}
 			}
-			MoveCannon();
+			cannonflag = 1;
 		}
 	}
 	}
@@ -8834,7 +8838,7 @@ int main(){
 					Cannon.y = Y;
 				}
 			}
-			MoveCannon();
+			cannonflag = 1;
 		}
 	}
 	}
@@ -8886,7 +8890,7 @@ int main(){
 					Cannon.y = Y;
 				}
 			}
-			MoveCannon();
+			cannonflag = 1;
 		}
 	}
 	}
@@ -8914,7 +8918,7 @@ int main(){
 					Cannon.y = Y;
 				}
 			}
-			MoveCannon();
+			cannonflag = 1;
 		}
 	}
 		if(CheckWreckedShips()){
