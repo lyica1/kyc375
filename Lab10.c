@@ -8217,8 +8217,8 @@ void MoveCannon(void){
 					j = 7;
 				}					
 				
-			ST7735_DrawBitmap(X+j, Y1, Cannon.image4, 3, 3);
-			ClearTrail(j, X, Y1, 3);
+			ST7735_DrawBitmap(X+j, Y, Cannon.image4, 3, 3);
+			ClearTrail(j, X, Y, 3);
 			Cannon.x = X+j;
 			Cannon.y = Y;
 			Cannon.exist = 1;
