@@ -7964,17 +7964,21 @@ int static X;
 int static Y;
 int X1;
 int Y1;
+int X2;
+int Y2;
 int Mailbox;
 int flag = 5;
 int shipcounter = 0;
 uint8_t score = 0;
 uint8_t NumofShips = 25;
-int k;
+int k=0;
 int cloudcount = 1;
 int gameon = 0;
 int j = 0;
 int buttonflag = 0;
-int cannonflag = 0;
+int Cannonflag = 0;
+int l = 0;
+int m=0;
 // Player Boat
 struct state{
 	signed x;
@@ -8039,7 +8043,7 @@ AmmoCrate Ammo[20] = {
 	{128, 85, Crate, 0},
 };*/
 typedef struct state5 CannonBall;
-CannonBall Cannon = {128, 85, Flame};
+CannonBall Cannon[30] = {{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0}};
 typedef struct state4 Wave1;
 Wave1 WaveTile1[25] = {WaveTileBottom1,WaveTileBottom2, WaveTileBottom3, WaveTileBottom4, WaveTileBottom5, WaveTileBottom6, WaveTileBottom7, WaveTileBottom8, WaveTileBottom9, WaveTileBottom10, WaveTileBottom11, WaveTileBottom12, WaveTileBottom13, WaveTileBottom14, WaveTileBottom15, WaveTileBottom16, WaveTileBottom17, WaveTileBottom18, WaveTileBottom19, WaveTileBottom20, WaveTileBottom21, WaveTileBottom22, WaveTileBottom23, WaveTileBottom24, WaveTileBottom25}; 
 typedef struct state3 Wave;
@@ -8169,16 +8173,22 @@ int CheckWreckedShips(void){
 			if(gameon == 1){
 				if(WreckedShips[k].x == 0){
 					if(WreckedShips[k].spawned == 1){
+						flag = 5;
+						Cannonflag = 0;
 						gameon = 0;
 						wait1();
 						for(k = 0; k < 100; k++){
 							WreckedShips[k].x = 128;
 							WreckedShips[k].spawned = 0;
 							}
+						for(k = 0; k < 30; k++){
+							Cannon[k].exist = 0;
+						}
 						for(k = 0; k < 20; k++){
 							ST7735_DrawBitmap(0, 159, Reddi, 128, 160);
 						}
 						NumofShips = 25;
+						MainBoat.Ammo = 30;
 						return 1;
 				}
 					}
@@ -8186,89 +8196,90 @@ int CheckWreckedShips(void){
 	}
 	return 0;
 }
-
-void ClearTrail(int k, int X, int Y, int H){
-	while(k > 0){
-		ST7735_DrawFastVLine(X-k, Y, H, 0xBB45);
-		k--;
-	}	
-}
-
 void MoveCannon(void){
 // Move Cannonball here
 	int j;
 	int check;
 	Mailbox = ADC_In();
+	for(k=0; k<30; k++){
+		if(Cannon[k].exist == 1){
 		if(gameon == 1){
-				X = Cannon.x;
-				Y = Cannon.y;
-				if(((Mailbox > 0 && Mailbox <= 585))){
-					j = 1;
-				}	else if(((Mailbox > 585)&&(Mailbox <= 1170))){
+			X2 = Cannon[k].x;
+			Y2 = Cannon[k].y;
+			if(((Mailbox > 0) && (Mailbox <= 585))){
+				j = 1;	
+		}	else if(((Mailbox > 585)&&(Mailbox <= 1170))){
 					j = 2;
-				}	else if(((Mailbox > 1170)&&(Mailbox <= 1755))){
+		}	else if(((Mailbox > 1170)&&(Mailbox <= 1755))){
 					j = 3;
-				}	else if(((Mailbox > 1755)&&(Mailbox <= 2340))){	
-					j = 4;
-				}	else if(((Mailbox > 2340)&&(Mailbox <= 2925))){
+		}	else if(((Mailbox > 1755)&&(Mailbox <= 2340))){	
+					j = 4;	
+		}	else if(((Mailbox > 2340)&&(Mailbox <= 2925))){
 					j = 5;
-				}	else if(((Mailbox > 2925)&&(Mailbox <=3510))){
-					j = 6;
-				}	else if(((Mailbox > 3510)&&(Mailbox <= 4095))){
+		}	else if(((Mailbox > 2925)&&(Mailbox <=3510))){
+					j = 6;	
+		}	else if(((Mailbox > 3510)&&(Mailbox <= 4095))){
 					j = 7;
-				}					
-				
-			ST7735_DrawBitmap(X+j, Y, Cannon.image4, 3, 3);
-			ClearTrail(j, X, Y, 3);
-			Cannon.x = X+j;
-			Cannon.y = Y;
-			Cannon.exist = 1;
+					}					
+				ST7735_DrawBitmap(X2+j, Y2, Flame, 5, 5);
+				ST7735_DrawBitmap(X2, Y2, OceanSmall, j, 5);
+				Cannon[k].x = X2+j;
+				Cannon[k].y = Y2;		
+				}
+			}
+		}
 	}
-}
-
 int CannonCollision(void){
 	int h = 0;
+	int z;
 // Check for Collision between Cannonballs and Wrecked ships. If NumofShips = 0, print Win screen
-	for(int k=0; k < 100; k++){
-		if(Cannon.exist == 1){
-			if(Cannon.x >= WreckedShips[k].x && Cannon.x <= (WreckedShips[k].x+16 && (Cannon.x+3) >= WreckedShips[k].x && (Cannon.x+3) <= (WreckedShips[k].x+16))){
-				if(Cannon.y >= WreckedShips[k].y && Cannon.y <= (WreckedShips[k].y+13 && (Cannon.y+3) >= WreckedShips[k].y && (Cannon.y+3) <= (WreckedShips[k].y+13))){
-					Cannon.exist = 0;
-					cannonflag = 0;
-					WreckedShips[k].spawned = 2;
-					int X = WreckedShips[k].x;
-					int Y = WreckedShips[k].y;
-					int X1 = Cannon.x;
-					int Y1 = Cannon.y;
-					ST7735_FillRect(X, Y, 16, 13, 0xBB45);
-					ST7735_FillRect(X1, Y1, 3, 3, 0xBB45);												
-					NumofShips -= 1;
-					ST7735_SetCursor(0,0);
-					if(NumofShips == 0){
-						gameon = 0;
-						wait1();
+	for(z =0; z < 30; z++){
+		if(Cannon[z].exist == 1){
+		for(int k=0; k<100; k++){
+				if(WreckedShips[k].spawned == 1){
+				if((Cannon[z].x +5 == WreckedShips[k].x) || (((Cannon[z].x +5 >= (WreckedShips[k].x)) && (Cannon[z].x + 5 <= WreckedShips[k].x + 10)))){
+					if((((Cannon[z].y -5) >= (WreckedShips[k].y-13)) && ((Cannon[z].y -5 <= (WreckedShips[k].y)))) || (((Cannon[z].y >= (WreckedShips[k].y -13)) && ((Cannon[z].y <= (WreckedShips[k].y)))))){
+						Cannon[z].exist = 2;
+						WreckedShips[k].spawned = 2;
+						ST7735_DrawBitmap(WreckedShips[k].x, WreckedShips[k].y, OceanSmall, 16, 13);
+						ST7735_DrawBitmap(Cannon[z].x, Cannon[z].y, OceanSmall, 5, 5);										
+						NumofShips -= 1;
+						ST7735_SetCursor(0,0);
+						if(NumofShips == 0){
+							flag = 5;
+							Cannonflag = 0;
+							gameon = 0;
+							wait1();
 						for(k = 0; k < 100; k++){
 							WreckedShips[k].x = 128;
 							WreckedShips[k].spawned = 0;
 		}
+						for(k = 0; k < 30; k++){
+							Cannon[k].exist = 0;
+						}
 						for(k = 0; k < 20; k++){
 							ST7735_DrawBitmap(0, 159, VictoryScreen, 128, 160);
 		}
 						NumofShips = 25;
+						MainBoat.Ammo = 30;
 						return 1;
-					}else if(NumofShips < 10){
-							LCD_OutDec(h);
-							LCD_OutDec(NumofShips);
-					}else{
-							LCD_OutDec(NumofShips);	
+					}
+						if(NumofShips < 10){
+					LCD_OutDec(h);
+					LCD_OutDec(NumofShips);
+					ST7735_OutString(" Ships ");
+				}else{
+					LCD_OutDec(NumofShips);
+					ST7735_OutString(" Ships ");
+				}
 				}
 				}
 	}
+}
 				}
 			}
 	return 0;
 		}
-
 void MoveSpawnedShips(void){
 	int check;
 	int k = 0;
@@ -8286,6 +8297,11 @@ void MoveSpawnedShips(void){
 					WreckedShips[k].x = X1-1;
 					WreckedShips[k].y = Y1;
 				}else if((k <= 89)&&((Mailbox > 585)&&(Mailbox <= 1170))){
+							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+							WreckedShips[k].x = X1-1;
+							WreckedShips[k].y = Y1;
+				}else if((k <= 89)&&((Mailbox > 1170)&&(Mailbox <= 1755))){
 						if(X1-2<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
@@ -8298,7 +8314,20 @@ void MoveSpawnedShips(void){
 									WreckedShips[k].x = X1-2;
 									WreckedShips[k].y = Y1;
 							}
-				}else if((k <= 89)&&((Mailbox > 1170)&&(Mailbox <= 1755))){
+					}	else if((k <= 89)&&((Mailbox > 1755)&&(Mailbox <= 2340))){
+						if(X1-2<0){
+							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+							WreckedShips[k].x = X1-1;
+							WreckedShips[k].y = Y1;
+							}else{
+									ST7735_DrawBitmap(X1-2, Y1, WreckedShips[k].image, 16, 13);
+									ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
+									ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+									WreckedShips[k].x = X1-2;
+									WreckedShips[k].y = Y1;
+							}
+			}	else if((k <= 89)&&((Mailbox > 2340)&&(Mailbox <= 2925))){
 						if(X1-3<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
@@ -8312,14 +8341,14 @@ void MoveSpawnedShips(void){
 									WreckedShips[k].x = X1-3;
 									WreckedShips[k].y = Y1;
 							}
-					}	else if((k <= 89)&&((Mailbox > 1755)&&(Mailbox <= 2340))){
+			}	else if((k <= 89)&&((Mailbox > 2925)&&(Mailbox <=3510))){
 						if(X1-4<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
 							WreckedShips[k].x = X1-1;
 							WreckedShips[k].y = Y1;
 							}else{
-									ST7735_DrawBitmap(X1-4, Y1, WreckedShips[k].image, 16, 13);
+									ST7735_DrawBitmap(X1-4, Y1, WreckedShips[k].image, 6, 13);
 									ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
 									ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
 									ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
@@ -8327,7 +8356,7 @@ void MoveSpawnedShips(void){
 									WreckedShips[k].x = X1-4;
 									WreckedShips[k].y = Y1;
 							}
-			}	else if((k <= 89)&&((Mailbox > 2340)&&(Mailbox <= 2925))){
+			}	else if((k <= 89)&&((Mailbox > 3510)&&(Mailbox <= 4095))){
 						if(X1-5<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
@@ -8343,47 +8372,17 @@ void MoveSpawnedShips(void){
 									WreckedShips[k].x = X1-5;
 									WreckedShips[k].y = Y1;
 							}
-			}	else if((k <= 89)&&((Mailbox > 2925)&&(Mailbox <=3510))){
-						if(X1-6<0){
-							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-1;
-							WreckedShips[k].y = Y1;
-							}else{
-									ST7735_DrawBitmap(X1-6, Y1, WreckedShips[k].image, 6, 13);
-									ST7735_DrawBitmap(X1+10, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-									WreckedShips[k].x = X1-6;
-									WreckedShips[k].y = Y1;
-							}
-			}	else if((k <= 89)&&((Mailbox > 3510)&&(Mailbox <= 4095))){
-						if(X1-7<0){
-							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-1;
-							WreckedShips[k].y = Y1;
-							}else{
-									ST7735_DrawBitmap(X1-7, Y1, WreckedShips[k].image, 16, 13);
-									ST7735_DrawBitmap(X1+9, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+10, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+11, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+12, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+13, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+14, Y1, WreckLine, 1, 13);
-									ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-									WreckedShips[k].x = X1-7;
-									WreckedShips[k].y = Y1;
-							}
 			}	else if((k >89)&&((Mailbox > 0)&&(Mailbox <= 585))){
 						ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 13, 9);
 						ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
 						WreckedShips[k].x = X1-1;
 						WreckedShips[k].y = Y1;
 			}	else if((k >89)&&((Mailbox > 585)&&(Mailbox <= 1170))){
+							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+							WreckedShips[k].x = X1-1;
+							WreckedShips[k].y = Y1;
+			}	else if((k>89)&&((Mailbox > 1170)&&(Mailbox <= 1755))){
 						if(X1-2<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
@@ -8396,7 +8395,20 @@ void MoveSpawnedShips(void){
 									WreckedShips[k].x = X1-2;
 									WreckedShips[k].y = Y1;
 							}
-			}	else if((k>89)&&((Mailbox > 1170)&&(Mailbox <= 1755))){
+			}	else if((k>89)&&((Mailbox > 1755)&&(Mailbox <=2340))){
+						if(X1-2<0){
+							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
+							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
+							WreckedShips[k].x = X1-1;
+							WreckedShips[k].y = Y1;
+							}else{
+									ST7735_DrawBitmap(X1-2, Y1, WreckedShips[k].image, 13, 9);
+									ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
+									ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
+									WreckedShips[k].x = X1-2;
+									WreckedShips[k].y = Y1;
+							}
+			}	else if((k>89)&&((Mailbox > 2340)&&(Mailbox <= 2925))){
 						if(X1-3<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
@@ -8409,9 +8421,9 @@ void MoveSpawnedShips(void){
 									ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
 									WreckedShips[k].x = X1-3;
 									WreckedShips[k].y = Y1;
-							}
-			}	else if((k>89)&&((Mailbox > 1755)&&(Mailbox <=2340))){
-						if(X1-4<0){
+							}	
+		}	else if((k>89)&&((Mailbox > 2925)&&(Mailbox <= 3510))){	
+					if(X1-4<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
 							WreckedShips[k].x = X1-1;
@@ -8425,7 +8437,7 @@ void MoveSpawnedShips(void){
 									WreckedShips[k].x = X1-4;
 									WreckedShips[k].y = Y1;
 							}
-			}	else if((k>89)&&((Mailbox > 2340)&&(Mailbox <= 2925))){
+			}	else if((k>89)&&((Mailbox > 3510)&&(Mailbox <= 4095))){
 						if(X1-5<0){
 							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
 							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
@@ -8440,41 +8452,6 @@ void MoveSpawnedShips(void){
 									ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
 									WreckedShips[k].x = X1-5;
 									WreckedShips[k].y = Y1;
-							}	
-		}	else if((k>89)&&((Mailbox > 2925)&&(Mailbox <= 3510))){	
-					if(X1-6<0){
-							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-1;
-							WreckedShips[k].y = Y1;
-							}else{
-									ST7735_DrawBitmap(X1-6, Y1, WreckedShips[k].image, 13, 9);
-									ST7735_DrawBitmap(X1+7, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-									WreckedShips[k].x = X1-6;
-									WreckedShips[k].y = Y1;
-							}
-			}	else if((k>89)&&((Mailbox > 3510)&&(Mailbox <= 4095))){
-						if(X1-7<0){
-							ST7735_DrawBitmap(X1-1, Y1, WreckedShips[k].image, 16, 13);
-							ST7735_DrawBitmap(X1+15, Y1, WreckLine, 1, 13);
-							WreckedShips[k].x = X1-1;
-							WreckedShips[k].y = Y1;
-							}else{
-									ST7735_DrawBitmap(X1-7, Y1, WreckedShips[k].image, 13, 9);
-									ST7735_DrawBitmap(X1+6, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+7, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+8, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+9, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+10, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+11, Y1, RockLine, 1, 9);
-									ST7735_DrawBitmap(X1+12, Y1, RockLine, 1, 9);
-									WreckedShips[k].x = X1-7;
-									WreckedShips[k].y = Y1;
 							}
 			}
 				}
@@ -8483,7 +8460,7 @@ void MoveSpawnedShips(void){
 	}
 void wait(void){
 	int z;
-	for(z=0; z<20000; z++){
+	for(z=0; z<25000; z++){
 	}
 }
 int Collision(void){
@@ -8493,16 +8470,22 @@ int Collision(void){
 			if((X+16 == WreckedShips[k].x) || (X == WreckedShips[k].x -16) || (X >= WreckedShips[k].x && X <= WreckedShips[k].x+16) || (X+16 >= WreckedShips[k].x && X <= WreckedShips[k].x+16)){
 					if(((Y >= WreckedShips[k].y-13) && (Y <= WreckedShips[k].y)) || ((Y-13 >= WreckedShips[k].y-13) && (Y-13 <= WreckedShips[k].y))){
 						if(WreckedShips[k].spawned == 1){
+							flag = 5;
+							Cannonflag = 0;
 							gameon = 0;
 							wait1();
 							for(k = 0; k < 100; k++){
 								WreckedShips[k].x = 128;
 								WreckedShips[k].spawned = 0;
 								}
+							for(k = 0; k < 30; k++){
+							Cannon[k].exist = 0;
+						}
 							for(k = 0; k < 20; k++){
 								ST7735_DrawBitmap(0, 159, Reddi, 128, 160);
 							}
 							NumofShips = 25;
+							MainBoat.Ammo = 30;
 							return 1;
 				}
 			}
@@ -8513,9 +8496,12 @@ int Collision(void){
 void SysTick_Handler(void){	//this is actually the main part of our lab lol
 int p;
 int q;
-p = Collision();
-q = CheckWreckedShips();
-	if(shipcounter == 50){
+int e;
+int l=0;
+int static w = 0;
+int count = 0;
+int h = 0;
+	if(shipcounter == 100){
 		flag = rand() % 3;
 		i = rand() % 96;
 		shipcounter = 0;
@@ -8524,20 +8510,42 @@ q = CheckWreckedShips();
 	if(gameon == 0){
 		shipcounter = 0;
 	}
-	if(p == 1){
-		flag = 5;
-}
-	if(q == 1){
-		flag = 5;
-	}
-	if((p == 0)&&(q == 0)&&(gameon == 1)){
-		if(cannonflag == 1){
-			MoveCannon();
-		}
-		MoveSpawnedShips();
+	ST7735_SetCursor(0,0);
+	if(gameon == 1){
+		MoveCannon();
 		CannonCollision();
+		MoveSpawnedShips();
+		if(Cannonflag == 1){
+			if(Cannon[w].exist ==0){
+				Cannon[w].x = MainBoat.x +17;
+				Cannon[w].y = MainBoat.y -6;
+				Cannon[w].exist = 1;
+				Cannonflag = 0;
+				w++;
+				MainBoat.Ammo -= 1;
+				if(NumofShips < 10){
+					LCD_OutDec(h);
+					LCD_OutDec(NumofShips);
+					ST7735_OutString(" Ships ");
+				}else{
+					LCD_OutDec(NumofShips);
+					ST7735_OutString(" Ships ");
+				}
+				if(MainBoat.Ammo < 10){
+					LCD_OutDec(h);
+					LCD_OutDec(MainBoat.Ammo);
+					ST7735_OutString(" Ammo");
+				}else{
+					LCD_OutDec(MainBoat.Ammo);
+					ST7735_OutString(" Ammo");
+				}
+	}
+			if(w == 30){
+				w = 0;
+			}
+}
 			if(flag == 0){
-				if(WreckedShips[i].spawned != 1){
+				if(WreckedShips[i].spawned == 0){
 					X1 = WreckedShips[i].x;
 					Y1 = WreckedShips[i].y;
 					WreckedShips[i].spawned = 1;
@@ -8553,7 +8561,7 @@ q = CheckWreckedShips();
 			}
 		}
 			if(flag == 1){
-				if(WreckedShips[i].spawned != 1){
+				if(WreckedShips[i].spawned == 0){
 					X1 = WreckedShips[i].x;
 					Y1 = WreckedShips[i].y;
 					WreckedShips[i].spawned = 1;
@@ -8567,7 +8575,7 @@ q = CheckWreckedShips();
 							WreckedShips[i].y = 100;
 					}
 				}
-				if(WreckedShips[i+1].spawned != 1){
+				if(WreckedShips[i+1].spawned == 0){
 					X1 = WreckedShips[i+1].x;
 					Y1 = WreckedShips[i+1].y;
 					WreckedShips[i+1].spawned = 1;
@@ -8583,7 +8591,7 @@ q = CheckWreckedShips();
 			}
 		}
 			if(flag == 2){
-				if(WreckedShips[i].spawned != 1){
+				if(WreckedShips[i].spawned == 0){
 					X1 = WreckedShips[i].x;
 					Y1 = WreckedShips[i].y;
 					WreckedShips[i].spawned = 1;
@@ -8597,21 +8605,21 @@ q = CheckWreckedShips();
 							WreckedShips[i].y = 140;
 					}
 				}
-				if(WreckedShips[i+1].spawned != 1){
+				if(WreckedShips[i+1].spawned == 0){
 					X1 = WreckedShips[i+1].x;
 					Y1 = WreckedShips[i+1].y;
 					WreckedShips[i+1].spawned = 1;
 					if(i+1 <= 89){
-						ST7735_DrawBitmap(X1-16, 96, WreckedShips[i+1].image, 16, 13);
+						ST7735_DrawBitmap(X1-16, 121, WreckedShips[i+1].image, 16, 13);
 						WreckedShips[i+1].x = X1 - 16;
-						WreckedShips[i+1].y = 96;
+						WreckedShips[i+1].y = 121;
 					}else{
-							ST7735_DrawBitmap(X1-13, 96, WreckedShips[i+1].image, 13, 9);
+							ST7735_DrawBitmap(X1-13, 121, WreckedShips[i+1].image, 13, 9);
 							WreckedShips[i+1].x = X1 - 13;
-							WreckedShips[i+1].y = 96;
+							WreckedShips[i+1].y = 121;
 					}
 				}
-				if(WreckedShips[i+2].spawned != 1){
+				if(WreckedShips[i+2].spawned == 0){
 					X1 = WreckedShips[i+2].x;
 					Y1 = WreckedShips[i+2].y;
 					WreckedShips[i+2].spawned = 1;
@@ -8652,20 +8660,27 @@ q = CheckWreckedShips();
 	}
 	}
 }
+void wait2(void){
+	int z;
+	for(z=0; z<500000; z++){
+	}
+}
 void Port_Init(void){
 	unsigned long delay;
 	SYSCTL_RCGCGPIO_R |= 0x00000008;
 	delay = SYSCTL_RCGCGPIO_R;
 	GPIO_PORTD_LOCK_R = 0x4C4F434B;
-	GPIO_PORTD_CR_R = 0x1F;
-	GPIO_PORTD_AFSEL_R &= ~0x1F;
-	GPIO_PORTD_AMSEL_R &= ~0x1F;
-	GPIO_PORTD_PCTL_R &= ~0x1F;
+	GPIO_PORTD_CR_R = 0xFF;
+	GPIO_PORTD_AFSEL_R &= ~0xFF;
+	GPIO_PORTD_AMSEL_R &= ~0xFF;
+	GPIO_PORTD_PCTL_R &= ~0xFF;
 	GPIO_PORTD_DIR_R |= 0x00;
-	GPIO_PORTD_DEN_R |= 0x1F;
+	GPIO_PORTD_DEN_R |= 0xFF;
 }
 int main(){
 	Start:
+	shipcounter = 0;
+	MainBoat.Ammo = 30;
 	TExaS_Init();
 	ST7735_InitR(INITR_REDTAB);
 	Port_Init();
@@ -8674,7 +8689,7 @@ int main(){
 	//Sound_Init(0);
 	SysTick_Init(2666667);//30Hz
 	ST7735_DrawBitmap(0, 159, logo, 128, 160);//print the log
-	while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+	while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 	for(int l=0; l<50; l++){
 		ST7735_FillScreen(0);
 	}
@@ -8683,6 +8698,9 @@ int main(){
 	ST7735_DrawBitmap(0, 93, Ship, 16, 13);
 	ST7735_SetCursor(0, 0);
 	LCD_OutDec(NumofShips);
+	ST7735_OutString(" Ships ");
+	LCD_OutDec(MainBoat.Ammo);
+	ST7735_OutString(" Ammo");
 	MainBoat.x = 0;
 	MainBoat.y = 93;
 	MainBoat.Ammo = 30;
@@ -8690,16 +8708,15 @@ int main(){
 		while(((GPIO_PORTD_DATA_R)&0x01) == 0x01){//up
 			if(gameon == 1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
-					goto Start;
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 				}
 				//end the game, make a button that resets the program
 				wait();
@@ -8711,46 +8728,37 @@ int main(){
 					MainBoat.y = Y - 1;
 				}
 			}
-			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
+		if(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
-			wait();
-			X = MainBoat.x;
-			if(MainBoat.Ammo > 0){
-				if(X+17 < 128){
-					ST7735_DrawBitmap(X+17, Y, Flame, 5, 5);
-					MainBoat.Ammo--;
-					Cannon.x = X + 17;
-					Cannon.y = Y;
-				}
-			}
-			cannonflag = 1;
-		}
+			Cannonflag = 1;
+				wait2();
 	}
 		}
+	}
 		while(((GPIO_PORTD_DATA_R)&0x02) == 0x02){		//down
 			if(gameon == 1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				//end the game, make a button that resets the program
@@ -8763,47 +8771,38 @@ int main(){
 					MainBoat.y = Y + 1;
 				}
 		}
-			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
+		if(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
-			wait();
-			X = MainBoat.x;
-			if(MainBoat.Ammo > 0){
-				if(X+17 < 128){
-					ST7735_DrawBitmap(X+17, Y, Flame, 5, 5);
-					MainBoat.Ammo--;
-					Cannon.x = X + 17;
-					Cannon.y = Y;
-				}
+			Cannonflag = 1;
+				wait2();
+	}
+}
 			}
-			cannonflag = 1;
-		}
-	}
-	}
 		while(((GPIO_PORTD_DATA_R)&0x04) == 0x04){																	//right		
 			if(gameon == 1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				//end the game, make a button that resets the program
 			}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				wait();
@@ -8815,47 +8814,38 @@ int main(){
 					MainBoat.x = X + 1;
 			}
 		}
-			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
+		if(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
-			wait();
-			X = MainBoat.x;
-			if(MainBoat.Ammo > 0){
-				if(X+17 < 128){
-					ST7735_DrawBitmap(X+17, Y, Flame, 5, 5);
-					MainBoat.Ammo--;
-					Cannon.x = X + 17;
-					Cannon.y = Y;
-				}
-			}
-			cannonflag = 1;
-		}
+			Cannonflag = 1;
+				wait2();
 	}
 	}
+}
 		while(((GPIO_PORTD_DATA_R)&0x08) == 0x08){																	//left
 			if(gameon == 1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				//end the game, make a button that resets the program
 			}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				wait();
@@ -8867,73 +8857,56 @@ int main(){
 					MainBoat.x = X - 1;
 			}
 		}
-			while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
+		if(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
-			wait();
-			X = MainBoat.x;
-			if(MainBoat.Ammo > 0){
-				if(X+17 < 128){
-					ST7735_DrawBitmap(X+17, Y, Flame, 5, 5);
-					MainBoat.Ammo--;
-					Cannon.x = X + 17;
-					Cannon.y = Y;
-				}
-			}
-			cannonflag = 1;
-		}
+			Cannonflag = 1;
+				wait2();
 	}
 	}
-		while(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
+}
+		if(((GPIO_PORTD_DATA_R)&0x40) == 0x40){
 			if(gameon==1){
 				if(CheckWreckedShips()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(Collision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
 				if(CannonCollision()){
-					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+					while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 					goto Start;
 				}
-			wait();
-			X = MainBoat.x;
-			if(MainBoat.Ammo > 0){
-				if(X+17 < 128){
-					ST7735_DrawBitmap(X+17, Y, Flame, 5, 5);
-					MainBoat.Ammo--;
-					Cannon.x = X + 17;
-					Cannon.y = Y;
-				}
-			}
-			cannonflag = 1;
-		}
+			Cannonflag = 1;
+				wait2();
 	}
+}
 		if(CheckWreckedShips()){
-			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 			goto Start;
 		}
 		if(Collision()){
-			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 			goto Start;
 		}
 		if(CannonCollision()){
-			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08)){}
+			while((((GPIO_PORTD_DATA_R)&0x01) != 0x01) && (((GPIO_PORTD_DATA_R)&0x02) != 0x02) && (((GPIO_PORTD_DATA_R)&0x04) != 0x04) && (((GPIO_PORTD_DATA_R)&0x08) != 0x08) && (((GPIO_PORTD_DATA_R)&0x40) != 0x40)){}
 			goto Start;
-				}
+		}
 				}
 				//end the game, make a button that resets the program
 			}//
+		
