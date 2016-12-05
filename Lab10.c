@@ -8233,7 +8233,8 @@ int CannonCollision(void){
 		if(Cannon.exist == 1){
 			if(Cannon.x >= WreckedShips[k].x && Cannon.x <= (WreckedShips[k].x+16 && (Cannon.x+3) >= WreckedShips[k].x && (Cannon.x+3) <= (WreckedShips[k].x+16))){
 				if(Cannon.y >= WreckedShips[k].y && Cannon.y <= (WreckedShips[k].y+13 && (Cannon.y+3) >= WreckedShips[k].y && (Cannon.y+3) <= (WreckedShips[k].y+13))){
-					Cannon.exist = 0;																							
+					Cannon.exist = 0;
+					cannonflag = 0;
 					WreckedShips[k].spawned = 2;
 					int X = WreckedShips[k].x;
 					int Y = WreckedShips[k].y;
