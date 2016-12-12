@@ -8043,7 +8043,7 @@ AmmoCrate Ammo[20] = {
 	{128, 85, Crate, 0},
 };*/
 typedef struct state5 CannonBall;
-CannonBall Cannon[30] = {{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0}};
+CannonBall Cannon[35] = {{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0},{128, 85, Flame, 0}};
 typedef struct state4 Wave1;
 Wave1 WaveTile1[25] = {WaveTileBottom1,WaveTileBottom2, WaveTileBottom3, WaveTileBottom4, WaveTileBottom5, WaveTileBottom6, WaveTileBottom7, WaveTileBottom8, WaveTileBottom9, WaveTileBottom10, WaveTileBottom11, WaveTileBottom12, WaveTileBottom13, WaveTileBottom14, WaveTileBottom15, WaveTileBottom16, WaveTileBottom17, WaveTileBottom18, WaveTileBottom19, WaveTileBottom20, WaveTileBottom21, WaveTileBottom22, WaveTileBottom23, WaveTileBottom24, WaveTileBottom25}; 
 typedef struct state3 Wave;
@@ -8181,14 +8181,14 @@ int CheckWreckedShips(void){
 							WreckedShips[k].x = 128;
 							WreckedShips[k].spawned = 0;
 							}
-						for(k = 0; k < 30; k++){
+						for(k = 0; k < 35; k++){
 							Cannon[k].exist = 0;
 						}
 						for(k = 0; k < 20; k++){
 							ST7735_DrawBitmap(0, 159, Reddi, 128, 160);
 						}
 						NumofShips = 25;
-						MainBoat.Ammo = 30;
+						MainBoat.Ammo = 35;
 						return 1;
 				}
 					}
@@ -8254,14 +8254,14 @@ int CannonCollision(void){
 							WreckedShips[k].x = 128;
 							WreckedShips[k].spawned = 0;
 		}
-						for(k = 0; k < 30; k++){
+						for(k = 0; k < 35; k++){
 							Cannon[k].exist = 0;
 						}
 						for(k = 0; k < 20; k++){
 							ST7735_DrawBitmap(0, 159, VictoryScreen, 128, 160);
 		}
 						NumofShips = 25;
-						MainBoat.Ammo = 30;
+						MainBoat.Ammo = 35;
 						return 1;
 					}
 						if(NumofShips < 10){
@@ -8478,14 +8478,14 @@ int Collision(void){
 								WreckedShips[k].x = 128;
 								WreckedShips[k].spawned = 0;
 								}
-							for(k = 0; k < 30; k++){
+							for(k = 0; k < 35; k++){
 							Cannon[k].exist = 0;
 						}
 							for(k = 0; k < 20; k++){
 								ST7735_DrawBitmap(0, 159, Reddi, 128, 160);
 							}
 							NumofShips = 25;
-							MainBoat.Ammo = 30;
+							MainBoat.Ammo = 35;
 							return 1;
 				}
 			}
@@ -8675,7 +8675,7 @@ int AmmoLeft(void){
 			WreckedShips[k].x = 128;
 			WreckedShips[k].spawned = 0;
 								}
-		for(k = 0; k < 30; k++){				
+		for(k = 0; k < 35; k++){				
 			Cannon[k].exist = 0;
 						}
 		for(k = 0; k < 20; k++){
@@ -8702,7 +8702,7 @@ void Port_Init(void){
 int main(){
 	Start:
 	shipcounter = 0;
-	MainBoat.Ammo = 30;
+	MainBoat.Ammo = 35;
 	TExaS_Init();
 	ST7735_InitR(INITR_REDTAB);
 	Port_Init();
@@ -8725,7 +8725,7 @@ int main(){
 	ST7735_OutString(" Ammo");*/
 	MainBoat.x = 0;
 	MainBoat.y = 93;
-	MainBoat.Ammo = 30;
+	MainBoat.Ammo = 35;
 	while(1){
 		while(((GPIO_PORTD_DATA_R)&0x01) == 0x01){//up
 			if(gameon == 1){
